@@ -6,6 +6,12 @@ This will migrate old Metabase pulses to subscriptions
 NODE_TLS_REJECT_UNAUTHORIZED=0 HOST=<hostname> USERNAME=<username> PASSWORD=<password> bun index.ts
 ```
 
+### How to run (docker)
+```
+docker build -t pulse-migrator .
+docker run -e NODE_TLS_REJECT_UNAUTHORIZED=0 -e HOST=<hostname> -e USERNAME=<username> -e PASSWORD=<password> pulse-migrator
+```
+
 ### Env vars you need to use
 - HOST: the hostname where your Metabase lives
 - USERNAME: your username (needs to be an admin)

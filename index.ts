@@ -30,11 +30,16 @@ const main = async () => {
     
     await Promise.all(pulseData.map(async (pulse) => {
         let dashboardId = await createDashboard(token, pulse.name, pulse.collection)
-        console.log("Created dashboard", dashboardId)
+        const dashboardUrl = `${host}/dashboard/${dashboardId}`
+        console.log(`Migrated Pulse: ${pulse.name} (ID: ${pulse.id})`)
+        console.log(`Created dashboard: ${pulse.name} (ID: ${dashboardId})`)
+        console.log(`Dashboard URL: ${dashboardUrl}`)
         await Promise.all(pulse.cards.map(async (card) => await addCardToDashboard(card, dashboardId, token)));
-        console.log("Added cards to dashboard", dashboardId)
+        console.log(`Added ${pulse.cards.length} cards to dashboard ${dashboardId}`)
         await createSubscription(dashboardId, pulse, token);
-        console.log("Created subscription for dashboard", dashboardId)
+        console.log(`Created subscription for dashboard ${dashboardId}`)
+        console.log(`Original Pulse URL: ${host}/pulse/${pulse.id}`)
+        console.log("---")
     }))
 }
 
@@ -80,6 +85,7 @@ const authenticate = async (): Promise<string> => {
 }
 
 interface PulseData {
+    id: number;
     name: string;
     channels: any;
     cards: any;
@@ -107,6 +113,7 @@ const getCards = async (pulse_id: Number, session_cookie: String): Promise<Pulse
     })
 
     return {
+        id: pulseCards.id,
         name: pulseCards.name,
         channels: pulseCards.channels,
         cards: pulseCards.cards,        
